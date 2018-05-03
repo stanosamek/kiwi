@@ -4,16 +4,18 @@
 # https://github.com/dockerfile/nginx
 #
 
+MAINTAINER Stano Samek <stanislav.samek@gmail.com>
+
 # Pull base image.
-FROM dockerfile/ubuntu
+FROM centos:7
 
 # Install Nginx.
 RUN \
-  add-apt-repository -y ppa:nginx/stable && \
-  apt-get update && \
-  apt-get install -y nginx && \
-  rm -rf /var/lib/apt/lists/* && \
-  echo "\ndaemon off;" >> /etc/nginx/nginx.conf && \
+  yum -y install --setopt=tsflags=nodocs centos-release-scl-rh && \
+  yum -y update --setopt=tsflags=nodocs && \
+  yum -y install --setopt=tsflags=nodocs scl-utils rh-nginx18 && \
+  yum clean all && \
+  mkdir -p /usr/share/nginx/html \
   chown -R www-data:www-data /var/lib/nginx
 
 # Define mountable directories.
@@ -31,7 +33,7 @@ EXPOSE 443
 
 # Install Openssl
 RUN \
-    apt-get install -y openssl && \
+    yum install -y openssl && \
     openssl genrsa -des3 -passout pass:x -out server.pass.key 2048 && \
     openssl rsa -passin pass:x -in server.pass.key -out server.key && \
     rm server.pass.key && \
