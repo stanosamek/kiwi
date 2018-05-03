@@ -43,3 +43,7 @@ RUN \
     openssl req -new -key server.key -out server.csr \
     -subj "/C=UK/ST=Warwickshire/L=Leamington/O=OrgName/OU=IT Department/CN=example.com" && \
     openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
+    
+# Copy index.html and default.conf
+COPY default.conf /etc/nginx/conf.d/default.conf
+COPY index.html /usr/share/nginx/html/index.html
